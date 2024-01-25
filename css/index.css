@@ -1,1 +1,20 @@
- 
+body{
+    background-image: url("https://c1.wallpaperflare.com/preview/392/834/513/gdansk-poland-arena-venue.jpg");
+    background-size: cover;
+}
+
+.start{
+    position: absolute;
+    top:25rem;
+    left:40rem;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 500px;
+    text-transform: uppercase;
+    text-align: center;
+    padding: 30px 80px;
+    color: #fff;
+    background-color: #dc1b1b;
+    height: 80px;
+    
+}
