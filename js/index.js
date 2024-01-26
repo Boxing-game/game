@@ -5,66 +5,65 @@ const canvas=document.querySelector('canvas');
 // supported, or the canvas has already been set to a different context mode.
 const c=canvas.getContext('2d')
 canvas.width=1900
-canvas.height=890 
+canvas.height=890
 
 c.fillRect(0,0,canvas.width,canvas.height)
+
 const gravity= 0.2
 
 class Sprite{
-    /*passing object in moving {left,right/up,down}*/
-     //volacity it's for showa in what derection the object is moving
-    constructor({position,velocity,color,offset}){
-
+    /*passing object for moving {left,right/up,down}*/
+     //volacity it's for show in what derection the object is moving
+    constructor({position,velocity,color,offset,imgsrc}){
         this.position=position       
         this.velocity=velocity
-        this.height=150
-        this.width=50
+        this.height=350
+        this.width=70
         this.lastkey
+        this.color=color
+        this.isAttacking 
+        this.health=100
+        this.imgsrc=imgsrc
         this.attackBox={
             position:{
                 x:this.position.x,
                 y:this.position.y
-
             },
             offset,
-            width:100,
-            height:50,
-          
-        }
-        this.color=color
-        this.isAttacking
+            width:250,
+            height:70,          
+        }     
 
     }
-
     //methode for the character 
-    //updaet ur charactere
+    //draw your charactere                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                !zsdsqqdzd
+    //updaet your  charactere
     //get the top and adet to the diff to stop the character
+    
+    draw(){ 
+                c.fillStyle = 'red'
+                c.fillRect( this.position.x, this.position.y ,  this.width ,this.height)
+             //attacckbox       
+            if(this.isAttacking)
+            {
+                c.fillStyle = 'green'
+                c.fillRect(this.attackBox.position.x,this.attackBox.position.y,this.attackBox.width,this.attackBox.height)
 
+            } 
+            var background = new Image();
+            background.src = "../photos/cover.jpg";
 
-
-
-
-
-    draw(){
-        c.fillStyle = 'red'
-        c.fillRect( this.position.x, this.position.y ,  this.width ,this.height)
-
-
-
-
-        //attacckbox
-       
-         if(this.isAttacking)
-        {
-            c.fillStyle = 'green'
-        c.fillRect(this.attackBox.position.x,this.attackBox.position.y,this.attackBox.width,this.attackBox.height)
-
-             }
-
-        
+            background.onload = function(){
+                 
+                c.drawImage(background,0,0,canvas.width,canvas.height);   
+            }  
+                 
         }
      update(){
-             this.draw()     
+
+             this.draw() 
+            
+              
              this.attackBox.position.x=this.position.x -this.attackBox.offset.x
              this.attackBox.position.y=this.position.y       
              this.position.y += this.velocity.y
@@ -77,21 +76,22 @@ class Sprite{
 
         attack(){
             this.isAttacking=true
+            console.log("attack")
             setTimeout(()=>{this.isAttacking=false},100)
                 
         }
-
-
-
 }
-////create players // player one get new instance pf classe Sprite
+
+
+/////////////************************************************************* */
+/ ///create players // player one get new instance pf classe Sprite
 const player= new Sprite({
     /*Moving*right/lef */
     position:{
          x:100,//
          y:0
     },
-    /*Moving * UP/Down */
+    /*Moving * UP/Down */ 
     velocity:{
          x:0,
          y:0
@@ -99,10 +99,9 @@ const player= new Sprite({
     offset:{
         x:0,
         y:0
-    }
+    },
+    imgsrc:'../image/img8.png'
 })
-
-
 const enemy=new Sprite({
     /*Moving*right/lef */
     position:{
@@ -115,9 +114,11 @@ const enemy=new Sprite({
         y:0
     },
     offset:{
-        x:50,
+        x:180,
         y:0 
-    }
+    },
+    imgsrc:'../image/img8.png'
+
 })
 
 //create a object for all button 
@@ -146,12 +147,9 @@ const keys={
     ArrowLeft:{
         pressed:false
     },
-    
    
 }
-
-
-function recctanggularCollision({recangle1,rectangle2}){
+function recctangularCollision({recangle1,rectangle2}){
     return (
         recangle1.attackBox.position.x + recangle1.attackBox.width>=rectangle2.position.x  && 
         recangle1.attackBox.position.x <=rectangle2.position.x+rectangle2.width &&
@@ -159,17 +157,11 @@ function recctanggularCollision({recangle1,rectangle2}){
         recangle1.attackBox.position.y>=rectangle2.position.y
     )
 }
-
-
-
-
-
 //create a annimation infitloop 
 function animate(){
-    window.requestAnimationFrame(animate)    
-     c.fillStyle = 'black'
-     c.fillRect( 0 ,0 , canvas.width , canvas.height)
-    //create instence of player in the infinit lopp to start game
+    window.requestAnimationFrame(animate)   
+    
+     
     player.update()
     enemy.update()
 
@@ -188,8 +180,7 @@ function animate(){
     } else if (keys.s.pressed && player.lastkey==='s'&& player.position.y+player.height<=canvas.height)
     {
         player.velocity.y = 5
-    }
-    
+    } 
 
 
     //enemy condition
@@ -211,31 +202,44 @@ function animate(){
     {
         enemy.velocity.y = 5
     }  
-
-
     //colusion
-    if(player.isAttacking)
+    if(recctangularCollision({recangle1:player,rectangle2:enemy})&&player.isAttacking)
     {
-        console.log('attack')
+       
         player.isAttacking=false
+    
+    $('#playerHealth').css('width',enemy.health+'%')
+
+        enemy.health-=20
+
+      //  console.log('enemy health'+ enemy.health)
 
 
     }
+    if(recctangularCollision({recangle1:player,rectangle2:enemy})&&enemy.isAttacking)
+    {
+       
+        enemy.isAttacking=false
+
+        $('#playerHealth').css('width',player.health+'%')
+
+        player.health-=20
+
+        //console.log('player health'+ player.health)
 
 
+        }
+        if(enemy.health<=0 || player.health<=0){
+            determineWinner({player,enemy,timerId})
+        }
 
 
-
-
-
-
-
-
-
-
-
+       
 }
 animate()
+
+
+
 //event lisner there is click /touche / wee want keyword
 window.addEventListener('keydown',(event)=>
 {
@@ -275,17 +279,16 @@ window.addEventListener('keydown',(event)=>
             break
         case 'ArrowDown':  
             enemy.lastkey='ArrowDown'
-
             keys.ArrowDown.pressed= true
-
+            break
+        case 'm':  
+            enemy.isAttacking= true
             break
     }
-    console.log(event.key)    
+   // console.log(event.key)    
 })
 window.addEventListener('keyup',(event)=>
 {
-
-
     //keys playe
     switch(event.key){
         case 'd':
@@ -310,8 +313,7 @@ window.addEventListener('keyup',(event)=>
             break
        
     }
-
-    //enemy keys
+     //enemy keys
     switch(event.key){
         case 'ArrowRight':  
             keys.ArrowRight.pressed= false
@@ -325,21 +327,44 @@ window.addEventListener('keyup',(event)=>
        
         break
      case 'ArrowDown':  
-        keys.ArrowDown.pressed=false
-       
+        keys.ArrowDown.pressed=false       
         break
-          case ' ':
-            player.attack()
+        case 'm':
+            enemy.attack()
             break
-   
-
     }
-    
-
-
-
 })
+//teimer
+let timer = 30
+let timerId
+function decreaseTimer() {
+  if (timer > 0) {
+    timerId = setTimeout(decreaseTimer, 1000)
+    //console.log(timer)
+    timer--
+    $('#timer').html(timer)
+  }
 
+  if (timer === 0) {
+    determineWinner({ player, enemy, timerId })
+  }
+}
+decreaseTimer()
+
+//determinate winner 
+
+function determineWinner({ player, enemy, timerId }) {
+    clearTimeout(timerId)
+    $('#displayText').css('display','flex')
+    if (player.health === enemy.health) {
+      $('#displayText').html( 'Tie')
+    } else if (player.health > enemy.health) {
+      $('#displayText').html('Player 1 Wins')
+    } else if (player.health < enemy.health) {
+      $('#displayText').html('Player 2 Wins')
+    }
+  }
+  
 
 
 

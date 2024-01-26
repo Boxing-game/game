@@ -1,12 +1,14 @@
-body{
+ body{
+    display: flex;
+    flex-wrap: wrap;
     background-image: url("https://c1.wallpaperflare.com/preview/392/834/513/gdansk-poland-arena-venue.jpg");
     background-size: cover;
 }
 
 .start{
     position: absolute;
-    top:25rem;
-    left:40rem;
+    top:35rem;
+    left:50rem;
     cursor: pointer;
     font-size: 16px;
     border-radius: 500px;

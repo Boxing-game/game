@@ -7,11 +7,11 @@ function Players(name,imageSrc,type){
 }
 
 
-var player1=Players("Chris Byrd" ,{ src:"img1.webp"},"fire")
-var player2=Players("Monte Barrett" ,{src:"img2.jpg"},"water" )
-var player3=Players("Andre Berto" , {src:"img3.jpeg"},"earth")
+var player1=Players("Chris Byrd" ,{ src:"img1.png"},"fire")
+var player2=Players("Monte Barrett" ,{src:"img8.png"},"water" )
+var player3=Players("Andre Berto" , {src:"img3.png"},"earth")
 var player4=Players("Henry Armstrong" , {src:"img4.jpg"},"snow")
-var player5=Players("Richel Hersisia" , {src:"img5.webp"},"water")
+var player5=Players("Richel Hersisia" , {src:"img5.png"},"water")
 var player6=Players("Rolando Navarrete" , {src:"img6.png"},"fire")
 
 
@@ -34,7 +34,7 @@ $(document).ready(function() {
     each(all,function(e,i){
         $(".players").append(`<div class="nameImg">
         <div class="img">
-            <img src="./image/${e.imageSrc.src}" style="width: 250px;height: 180px;" alt="">
+           <a  href="../html/index3.html"> <img src="../image/${e.imageSrc.src}" style="width: 250px;height: 180px;" alt=""></a>
 
         </div>
 
